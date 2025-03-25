@@ -24,14 +24,17 @@ export default function Register() {
         password: formData.get("password"),
       };
 
-      const response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        cache: "no-store",
-      });
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_API_URL + "/api/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+          cache: "no-store",
+        }
+      );
 
       const result = await response.json();
 
@@ -151,7 +154,7 @@ export default function Register() {
           ) : (
             <button
               type="submit"
-              className="h-12 text-white bg-yellow-500 border-0 py-2 px-8 hover:bg-yellow-600 rounded text-lg focus:outline-none"
+              className="h-12 text-white bg-amber-500 border-0 py-2 px-8 hover:bg-amber-600 rounded text-lg focus:outline-none"
             >
               Register
             </button>
@@ -159,7 +162,7 @@ export default function Register() {
 
           <p className="text-gray-500 mt-3 mx-auto">
             Have an account?{" "}
-            <Link href={"/login"} className="text-yellow-500">
+            <Link href={"/login"} className="text-amber-500">
               Sign In
             </Link>
           </p>

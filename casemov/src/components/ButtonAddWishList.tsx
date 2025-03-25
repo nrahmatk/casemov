@@ -15,30 +15,44 @@ export default function ButtonAddWishList({ productId }: Props) {
     try {
       setIsLoading(true);
 
-      const res = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/wishlist", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({productId}),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/wishlist`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ productId }),
+        }
+      );
 
       const result = await res.json();
+
       if (res.status === 201) {
         Swal.fire({
+          icon: "success",
+          title: "Added to Wishlist",
           text: result.message,
           confirmButtonColor: "#e9b308",
+          confirmButtonText: "OK",
+          iconColor: "#e9b308",
         });
       } else {
         Swal.fire({
+          icon: "warning",
+          title: "Failed to Add",
           text: result.message,
           confirmButtonColor: "#e9b308",
+          confirmButtonText: "OK",
         });
       }
     } catch (error) {
       Swal.fire({
-        text: "Failed to add item to wishlist",
+        icon: "error",
+        title: "Error",
+        text: "Failed to add item to wishlist. Please try again later.",
         confirmButtonColor: "#e9b308",
+        confirmButtonText: "OK",
       });
     } finally {
       setIsLoading(false);
@@ -47,7 +61,7 @@ export default function ButtonAddWishList({ productId }: Props) {
 
   return (
     <button
-      className={`rounded-full w-10 h-10 bg-yellow-500 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4 ${
+      className={`rounded-full w-10 h-10 bg-amber-500 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4 ${
         isLoading ? "opacity-100 cursor-not-allowed p-2" : ""
       }`}
       onClick={handleAddToWishlist}

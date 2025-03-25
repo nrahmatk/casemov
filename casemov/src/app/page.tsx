@@ -1,446 +1,370 @@
-"use server";
-
-import Footer from "@/components/Footer";
 import Testimony from "@/components/Testimony";
 import { formatRupiah } from "@/components/formatRupiah";
-import { ProductModel } from "@/components/type";
+import type { ProductModel } from "@/components/type";
+import {
+  ArrowRight,
+  Check,
+  Shield,
+  Truck,
+  Users,
+  Zap,
+  Package,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 async function fetchData() {
-  const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?page=1&limit=8`);
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/products?page=1&limit=8`
+  );
   return data.json();
 }
 
 export default async function Home() {
   const data = await fetchData();
   const products: ProductModel[] = data.data;
+
   return (
-    <div className="bg-gray-100">
-      <div className="container max-w-screen-xl mx-auto">
-        {/* Hero Section */}
-        <div className="container px-6 py-16 mx-auto">
-          <div className="items-center lg:flex">
-            <div className="w-full lg:w-1/2">
-              <div className="lg:max-w-lg">
-                <h1 className="text-3xl font-semibold text-gray-800 dark:text-white lg:text-4xl">
-                  Best place to choose <br /> your{" "}
-                  <span className="text-yellow-500 ">Phone Case</span>
+    <div className="bg-gray-50">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-white to-gray-50 py-20 md:py-24 lg:py-32 lg:pt-16">
+        <div className="absolute inset-0 z-0 opacity-5">
+          <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px]" />
+        </div>
+
+        <div className="container relative z-10 mx-auto px-4 md:px-6">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <div className="inline-flex items-center rounded-full border border-gray-200 bg-white/90 px-3 py-1 text-sm font-medium text-gray-600 shadow-sm backdrop-blur-sm">
+                  <span className="mr-1 h-2 w-2 rounded-full bg-green-500"></span>{" "}
+                  New Collection Available
+                </div>
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
+                  Elevate Your Device With Our{" "}
+                  <span className="bg-gradient-to-r from-amber-500 to-amber-400 bg-clip-text text-transparent">
+                    Premium Cases
+                  </span>
                 </h1>
-                <p className="mt-3 text-gray-600 dark:text-gray-400">
-                  Explore our premium selection of phone cases designed for
-                  style and durability. With a wide range of materials and
-                  designs, find the perfect case to match your taste and protect
-                  your device.
-                </p>
-                <Link href={"/products"}>
-                  <button className=" w-full px-5 py-2 mt-6 text-sm tracking-wider text-white uppercase bg-yellow-500 rounded-lg lg:w-auto hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 transform hover:scale-105 transition duration-300 ease-in-out">
-                    Shop Now
+              </div>
+              <p className="max-w-[600px] text-lg text-gray-600 md:text-xl">
+                Explore our curated selection of phone cases designed for style
+                and durability. Find the perfect case that reflects your
+                personality while providing superior protection.
+              </p>
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <Link href="/products">
+                  <button className="group inline-flex h-12 items-center justify-center rounded-full bg-amber-500 px-8 text-sm font-medium text-white shadow-md transition-all hover:bg-amber-600 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+                    Shop Collection
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+                </Link>
+                <Link href="/about">
+                  <button className="inline-flex h-12 items-center justify-center rounded-full border border-gray-200 bg-white px-8 text-sm font-medium text-gray-900 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-200 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+                    Learn More
                   </button>
                 </Link>
               </div>
+              <div className="flex items-center gap-4 pt-2">
+                <div className="flex -space-x-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div
+                      key={i}
+                      className="inline-block h-8 w-8 overflow-hidden rounded-full border-2 border-white shadow-sm"
+                    >
+                      <img
+                        src={`https://randomuser.me/api/portraits/thumb/men/${
+                          i + 20
+                        }.jpg`}
+                        alt={`User ${i}`}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium text-gray-900">500+</span> happy
+                  customers
+                </p>
+              </div>
             </div>
-            <div className=" transform hover:scale-105 transition duration-300 ease-in-out flex items-center justify-center w-full mt-6 lg:mt-0 lg:w-1/2">
-              <img
-                className="w-full h-full lg:max-w-3xl"
-                src="/hero.svg"
-                alt="gambar ilustrasi"
-              />
+            <div className="relative mx-auto aspect-square w-full max-w-md lg:max-w-none">
+              <div className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-amber-400/20 to-amber-500/5 blur-3xl"></div>
+              <div className="group relative h-full w-full overflow-hidden rounded-2xl border border-gray-100 bg-white/80 p-2 shadow-xl backdrop-blur transition-all duration-300 hover:shadow-2xl lg:p-3">
+                <div className="relative h-full w-full overflow-hidden rounded-xl bg-white">
+                  <img
+                    src="https://res.cloudinary.com/dszhu92hc/image/upload/v1742907339/lrjbznksv7kih90a26hh.jpg"
+                    alt="Premium phone case collection"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div className="absolute bottom-6 left-6 right-6 rounded-xl bg-white/90 p-4 shadow-lg backdrop-blur-sm transition-transform duration-300 group-hover:translate-y-0 lg:translate-y-4">
+                  <p className="font-medium text-gray-900">
+                    Discover our premium collection
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Durable, stylish, and perfectly fitted
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* New Products Section */}
-        {/* <section className="text-gray-600 body-font">
-          <div className="container px-5 py-24 mx-auto">
-            <h1 className="text-3xl font-medium title-font text-gray-900 mb-12 text-center">
-              New Arrivals
-            </h1>
-            <div className="flex flex-wrap -m-4">
-              <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-                <a className="block relative rounded overflow-hidden">
-                  <img
-                    alt="ecommerce"
-                    className="object-cover object-center w-full h-full block"
-                    src={"/case1.webp"}
-                  />
-                </a>
-                <div className="mt-4">
-                  <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                    CATEGORY
-                  </h3>
-                  <h2 className="text-gray-900 title-font text-lg font-medium">
-                    The Catalyzer
-                  </h2>
-                  <p className="mt-1">$16.00</p>
-                </div>
+      <div className="container mx-auto max-w-screen-xl">
+        {/* Case Options Section */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="mb-16 flex flex-wrap items-center">
+              <div className="mb-6 w-full lg:mb-0 lg:w-1/2">
+                <span className="mb-2 block text-sm font-medium uppercase tracking-wider text-amber-500">
+                  Our Materials
+                </span>
+                <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+                  Premium Phone Case Options
+                </h2>
+                <div className="mt-4 h-1 w-20 rounded bg-amber-500" />
               </div>
-              <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-                <a className="block relative rounded overflow-hidden">
-                  <img
-                    alt="ecommerce"
-                    className="object-cover object-center w-full h-full block"
-                    src={"/case1.webp"}
-                  />
-                </a>
-                <div className="mt-4">
-                  <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                    CATEGORY
-                  </h3>
-                  <h2 className="text-gray-900 title-font text-lg font-medium">
-                    The Catalyzer
-                  </h2>
-                  <p className="mt-1">$16.00</p>
-                </div>
-              </div>
-              <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-                <a className="block relative rounded overflow-hidden">
-                  <img
-                    alt="ecommerce"
-                    className="object-cover object-center w-full h-full block"
-                    src={"/case1.webp"}
-                  />
-                </a>
-                <div className="mt-4">
-                  <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                    CATEGORY
-                  </h3>
-                  <h2 className="text-gray-900 title-font text-lg font-medium">
-                    The Catalyzer
-                  </h2>
-                  <p className="mt-1">$16.00</p>
-                </div>
-              </div>
-              <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-                <a className="block relative rounded overflow-hidden">
-                  <img
-                    alt="ecommerce"
-                    className="object-cover object-center w-full h-full block"
-                    src={"/case1.webp"}
-                  />
-                </a>
-                <div className="mt-4">
-                  <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                    CATEGORY
-                  </h3>
-                  <h2 className="text-gray-900 title-font text-lg font-medium">
-                    The Catalyzer
-                  </h2>
-                  <p className="mt-1">$16.00</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section> */}
-
-        {/* Bahan */}
-        <section className="text-gray-600 body-font">
-          <div className="container px-5 py-24 mx-auto">
-            <div className="flex flex-wrap w-full mb-20">
-              <div className="lg:w-1/2 w-full mb-6 lg:mb-0">
-                <h1 className="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">
-                  Mobile Phone Case Options
-                </h1>
-                <div className="h-1 w-20 bg-yellow-500 rounded" />
-              </div>
-              <p className="lg:w-1/2 w-full leading-relaxed text-gray-500">
+              <p className="w-full text-lg leading-relaxed text-gray-600 lg:w-1/2">
                 Choose the best mobile phone case that suits your needs and
                 style. We offer a variety of cases designed to protect your
                 device while enhancing its aesthetics. From maximum protection
                 to minimalist designs, find the perfect case for you below.
               </p>
             </div>
-            <div className="flex flex-wrap -m-4">
-              <div className="xl:w-1/4 md:w-1/2 p-2">
-                <div className="bg-gray-100 p-6 rounded-lg h-full flex flex-col">
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              <div className="group rounded-2xl bg-white p-6 shadow-md transition-all duration-300 hover:shadow-xl">
+                <div className="mb-6 overflow-hidden rounded-xl">
                   <img
-                    className="h-40 rounded w-full object-cover object-center mb-6"
+                    className="h-48 w-full transform object-cover object-center transition-transform duration-500 group-hover:scale-105"
                     src="https://res.cloudinary.com/dszhu92hc/image/upload/v1720236055/dt3bv9rkwricuieiivnb.png"
-                    alt="content"
+                    alt="Premium Hybrid Crystal case"
                   />
-                  <h2 className="text-lg text-gray-900 font-medium title-font mb-4">
-                    Premium Hybrid Crystal
-                  </h2>
-                  <div className="h-1 bg-gray-300 rounded mb-4" />
-                  <p className="leading-relaxed text-base flex-grow">
-                    This case combines beauty and strength with hybrid
-                    scratch-resistant material and a TPU bumper that protects
-                    the camera. The responsive buttons offer a comfortable user
-                    experience.
-                  </p>
                 </div>
+                <h3 className="mb-3 text-xl font-bold text-gray-900">
+                  Premium Hybrid Crystal
+                </h3>
+                <div className="mb-4 h-0.5 w-full bg-gray-100" />
+                <p className="text-gray-600">
+                  This case combines beauty and strength with hybrid
+                  scratch-resistant material and a TPU bumper that protects the
+                  camera. The responsive buttons offer a comfortable user
+                  experience.
+                </p>
               </div>
-              <div className="xl:w-1/4 md:w-1/2 p-2">
-                <div className="bg-gray-100 p-6 rounded-lg h-full flex flex-col">
+
+              <div className="group rounded-2xl bg-white p-6 shadow-md transition-all duration-300 hover:shadow-xl">
+                <div className="mb-6 overflow-hidden rounded-xl">
                   <img
-                    className="h-40 rounded w-full object-cover object-center mb-6"
+                    className="h-48 w-full transform object-cover object-center transition-transform duration-500 group-hover:scale-105"
                     src="https://res.cloudinary.com/dszhu92hc/image/upload/v1720236055/tl6pbtdig3vsvcnnrch7.png"
-                    alt="content"
+                    alt="High Plastic TPE case"
                   />
-                  <h2 className="text-lg text-gray-900 font-medium title-font mb-4">
-                    High Plastic TPE
-                  </h2>
-                  <div className="h-1 bg-gray-300 rounded mb-4" />
-                  <p className="leading-relaxed text-base flex-grow">
-                    Made from strong TPE plastic, this case provides optimal
-                    protection with responsive buttons and bezel protection that
-                    keeps the screen safe.
-                  </p>
                 </div>
+                <h3 className="mb-3 text-xl font-bold text-gray-900">
+                  High Plastic TPE
+                </h3>
+                <div className="mb-4 h-0.5 w-full bg-gray-100" />
+                <p className="text-gray-600">
+                  Made from strong TPE plastic, this case provides optimal
+                  protection with responsive buttons and bezel protection that
+                  keeps the screen safe.
+                </p>
               </div>
-              <div className="xl:w-1/4 md:w-1/2 p-2">
-                <div className="bg-gray-100 p-6 rounded-lg h-full flex flex-col">
+
+              <div className="group rounded-2xl bg-white p-6 shadow-md transition-all duration-300 hover:shadow-xl">
+                <div className="mb-6 overflow-hidden rounded-xl">
                   <img
-                    className="h-40 rounded w-full object-cover object-center mb-6"
+                    className="h-48 w-full transform object-cover object-center transition-transform duration-500 group-hover:scale-105"
                     src="https://res.cloudinary.com/dszhu92hc/image/upload/v1720236054/ebckbmmlcibtbxy1fh9e.png"
-                    alt="content"
+                    alt="Blackmatte Texture case"
                   />
-                  <h2 className="text-lg text-gray-900 font-medium title-font mb-4">
-                    Blackmatte Texture
-                  </h2>
-                  <div className="h-1 bg-gray-300 rounded mb-4" />
-
-                  <p className="leading-relaxed text-base flex-grow">
-                    A case with an elegant matte texture and soft inner lining
-                    for extra protection. The black matte design provides a
-                    premium look and maximum protection.
-                  </p>
                 </div>
+                <h3 className="mb-3 text-xl font-bold text-gray-900">
+                  Blackmatte Texture
+                </h3>
+                <div className="mb-4 h-0.5 w-full bg-gray-100" />
+                <p className="text-gray-600">
+                  A case with an elegant matte texture and soft inner lining for
+                  extra protection. The black matte design provides a premium
+                  look and maximum protection.
+                </p>
               </div>
-              <div className="xl:w-1/4 md:w-1/2 p-2">
-                <div className="bg-gray-100 p-6 rounded-lg h-full flex flex-col">
-                  <img
-                    className="h-40 rounded w-full object-cover object-center mb-6"
-                    src="https://res.cloudinary.com/dszhu92hc/image/upload/v1720236055/cykyz1bjeaojxlzhe5v7.png"
-                    alt="content"
-                  />
-                  <h2 className="text-lg text-gray-900 font-medium title-font mb-4">
-                    Premium Softcase Antiknock
-                  </h2>
-                  <div className="h-1 bg-gray-300 rounded mb-4" />
 
-                  <p className="leading-relaxed text-base flex-grow">
-                    This premium soft case is specially designed to protect your
-                    phone from impacts. The soft yet strong material ensures
-                    your device&apos;s safety with an elegant style.
-                  </p>
+              <div className="group rounded-2xl bg-white p-6 shadow-md transition-all duration-300 hover:shadow-xl">
+                <div className="mb-6 overflow-hidden rounded-xl">
+                  <img
+                    className="h-48 w-full transform object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                    src="https://res.cloudinary.com/dszhu92hc/image/upload/v1720236055/cykyz1bjeaojxlzhe5v7.png"
+                    alt="Premium Softcase Antiknock case"
+                  />
                 </div>
+                <h3 className="mb-3 text-xl font-bold text-gray-900">
+                  Premium Softcase Antiknock
+                </h3>
+                <div className="mb-4 h-0.5 w-full bg-gray-100" />
+                <p className="text-gray-600">
+                  This premium soft case is specially designed to protect your
+                  phone from impacts. The soft yet strong material ensures your
+                  device&apos;s safety with an elegant style.
+                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Koleksi */}
-        <section className="text-gray-600 body-font">
-          <div className="container px-5 py-24 mx-auto bg-white rounded-lg">
-            <h1 className="text-3xl font-medium title-font text-gray-900 mb-12 text-center transform hover:scale-105 transition duration-300 ease-in-out">
-              Our Product
-            </h1>
-            <div className="flex flex-wrap -m-4">
+        {/* Products Section */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="mb-16 text-center">
+              <span className="mb-2 block text-sm font-medium uppercase tracking-wider text-amber-500">
+                Featured Collection
+              </span>
+              <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+                Our Products
+              </h2>
+              <div className="mx-auto mt-4 h-1 w-20 rounded bg-amber-500" />
+            </div>
+
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {products.map((product) => (
-                <div
-                  className="lg:w-1/4 md:w-1/2 p-4 w-full transform hover:scale-105 transition duration-300 ease-in-out"
+                <Link
+                  href={`/products/${product.slug}`}
                   key={product._id}
+                  className="group overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
-                  <Link
-                    href={`/products/${product.slug}`}
-                    className="block relative h-56 rounded overflow-hidden"
-                  >
+                  <div className="aspect-square overflow-hidden">
                     <img
-                      alt="ecommerce"
-                      className="object-cover object-center w-full h-full block"
-                      src={product.thumbnail}
+                      alt={product.name}
+                      className="h-full w-full transform object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                      src={product.thumbnail || "/placeholder.svg"}
                     />
-                  </Link>
-                  <div className="mt-4">
-                    <h2 className="text-gray-900 text-center title-font text-lg font-medium">
+                  </div>
+                  <div className="p-6">
+                    <h3 className="mb-2 text-center text-lg font-medium text-gray-900 group-hover:text-amber-500">
                       {product.name}
-                    </h2>
-                    <p className="mt-1 text-center">
+                    </h3>
+                    <p className="text-center text-lg font-bold text-amber-500">
                       {formatRupiah(product.price)}
                     </p>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
-            <div className="flex justify-center mt-8">
+
+            <div className="mt-16 flex justify-center">
               <Link
                 href="/products"
-                className="transform hover:scale-105 transition duration-300 ease-in-out inline-flex text-white bg-yellow-500 border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded text-lg"
+                className="inline-flex items-center rounded-full bg-amber-500 px-8 py-3 text-base font-medium text-white shadow-md transition-all hover:bg-amber-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
               >
-                See More Products
+                View All Products
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </div>
           </div>
         </section>
 
-        {/* why */}
-        <section className="text-gray-600 body-font">
-          <div className="container px-5 py-24 mx-auto">
-            <div className="flex flex-wrap w-full mb-20 flex-col items-center text-center">
-              <h1 className="sm:text-3xl text-2xl font-medium title-font text-gray-900">
-                Why casemov?
-              </h1>
+        {/* Why Choose Us Section */}
+        <section className="bg-white py-20">
+          <div className="container mx-auto px-4">
+            <div className="mb-16 text-center">
+              <span className="mb-2 block text-sm font-medium uppercase tracking-wider text-amber-500">
+                Our Advantages
+              </span>
+              <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+                Why Choose Casemov?
+              </h2>
+              <div className="mx-auto mt-4 h-1 w-20 rounded bg-amber-500" />
             </div>
-            <div className="flex flex-wrap -m-4">
-              <div className="xl:w-1/3 md:w-1/2 p-4">
-                <div className="border border-gray-200 p-6 rounded-lg">
-                  <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-yellow-100 text-yellow-500 mb-4">
-                    <svg
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      className="w-6 h-6"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                    </svg>
-                  </div>
-                  <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
-                    Stock Up To Date
-                  </h2>
-                  <p className="leading-relaxed text-base">
-                    We provide a wide range of cases for all types of phones,
-                    from older models to the latest ones!
-                  </p>
+
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm transition-all duration-300 hover:shadow-md">
+                <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                  <Package className="h-7 w-7" />
                 </div>
+                <h3 className="mb-4 text-xl font-bold text-gray-900">
+                  Stock Up To Date
+                </h3>
+                <p className="text-gray-600">
+                  We provide a wide range of cases for all types of phones, from
+                  older models to the latest ones!
+                </p>
               </div>
-              <div className="xl:w-1/3 md:w-1/2 p-4">
-                <div className="border border-gray-200 p-6 rounded-lg">
-                  <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-yellow-100 text-yellow-500 mb-4">
-                    <svg
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      className="w-6 h-6"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle cx={6} cy={6} r={3} />
-                      <circle cx={6} cy={18} r={3} />
-                      <path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12" />
-                    </svg>
-                  </div>
-                  <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
-                    Sharp Print Results
-                  </h2>
-                  <p className="leading-relaxed text-base">
-                    Enjoy phone cases with sharp print results and stunning
-                    details. Our cutting-edge printing technology ensures every
-                    design looks perfect.
-                  </p>
+
+              <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm transition-all duration-300 hover:shadow-md">
+                <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                  <Zap className="h-7 w-7" />
                 </div>
+                <h3 className="mb-4 text-xl font-bold text-gray-900">
+                  Sharp Print Results
+                </h3>
+                <p className="text-gray-600">
+                  Enjoy phone cases with sharp print results and stunning
+                  details. Our cutting-edge printing technology ensures every
+                  design looks perfect.
+                </p>
               </div>
-              <div className="xl:w-1/3 md:w-1/2 p-4">
-                <div className="border border-gray-200 p-6 rounded-lg">
-                  <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-yellow-100 text-yellow-500 mb-4">
-                    <svg
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      className="w-6 h-6"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                      <circle cx={12} cy={7} r={4} />
-                    </svg>
-                  </div>
-                  <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
-                    Best Price
-                  </h2>
-                  <p className="leading-relaxed text-base">
-                    Get the best quality at affordable prices. We offer premium
-                    phone cases without breaking your bank.
-                  </p>
+
+              <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm transition-all duration-300 hover:shadow-md">
+                <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                  <Check className="h-7 w-7" />
                 </div>
+                <h3 className="mb-4 text-xl font-bold text-gray-900">
+                  Best Price
+                </h3>
+                <p className="text-gray-600">
+                  Get the best quality at affordable prices. We offer premium
+                  phone cases without breaking your bank.
+                </p>
               </div>
-              <div className="xl:w-1/3 md:w-1/2 p-4">
-                <div className="border border-gray-200 p-6 rounded-lg">
-                  <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-yellow-100 text-yellow-500 mb-4">
-                    <svg
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      className="w-6 h-6"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7" />
-                    </svg>
-                  </div>
-                  <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
-                    Customer Oriented
-                  </h2>
-                  <p className="leading-relaxed text-base">
-                    We prioritize your satisfaction! Our services are designed
-                    to perfectly meet customers needs and desires.
-                  </p>
+
+              <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm transition-all duration-300 hover:shadow-md">
+                <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                  <Users className="h-7 w-7" />
                 </div>
+                <h3 className="mb-4 text-xl font-bold text-gray-900">
+                  Customer Oriented
+                </h3>
+                <p className="text-gray-600">
+                  We prioritize your satisfaction! Our services are designed to
+                  perfectly meet customers needs and desires.
+                </p>
               </div>
-              <div className="xl:w-1/3 md:w-1/2 p-4">
-                <div className="border border-gray-200 p-6 rounded-lg">
-                  <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-yellow-100 text-yellow-500 mb-4">
-                    <svg
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      className="w-6 h-6"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-                    </svg>
-                  </div>
-                  <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
-                    Guaranteed
-                  </h2>
-                  <p className="leading-relaxed text-base">
-                    Shop with peace of mind as every product we offer comes with
-                    a guarantee. Your satisfaction is our top priority.
-                  </p>
+
+              <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm transition-all duration-300 hover:shadow-md">
+                <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                  <Shield className="h-7 w-7" />
                 </div>
+                <h3 className="mb-4 text-xl font-bold text-gray-900">
+                  Guaranteed
+                </h3>
+                <p className="text-gray-600">
+                  Shop with peace of mind as every product we offer comes with a
+                  guarantee. Your satisfaction is our top priority.
+                </p>
               </div>
-              <div className="xl:w-1/3 md:w-1/2 p-4">
-                <div className="border border-gray-200 p-6 rounded-lg">
-                  <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-yellow-100 text-yellow-500 mb-4">
-                    <svg
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      className="w-6 h-6"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                  </div>
-                  <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
-                    Fast Process
-                  </h2>
-                  <p className="leading-relaxed text-base">
-                    No need to wait long! We ensure that the ordering to
-                    delivery process is fast and efficient, so you get your
-                    dream phone case promptly.
-                  </p>
+
+              <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm transition-all duration-300 hover:shadow-md">
+                <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                  <Truck className="h-7 w-7" />
                 </div>
+                <h3 className="mb-4 text-xl font-bold text-gray-900">
+                  Fast Process
+                </h3>
+                <p className="text-gray-600">
+                  No need to wait long! We ensure that the ordering to delivery
+                  process is fast and efficient, so you get your dream phone
+                  case promptly.
+                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Reviews Section */}
+        {/* Testimonials Section */}
         <Testimony />
-
-        {/* Footer */}
-        {/* <Footer /> */}
       </div>
     </div>
   );

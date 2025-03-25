@@ -27,8 +27,8 @@ export default function Contact() {
           </h1>
           <p className="lg:w-2/3 mx-auto leading-relaxed text-base">
             Your satisfaction is our top priority. If you have any complaints or
-            questions, please do not hesitate to reach out to us through the form
-            below.
+            questions, please do not hesitate to reach out to us through the
+            form below.
           </p>
         </div>
         <div className="lg:w-1/2 md:w-2/3 mx-auto">
@@ -105,7 +105,7 @@ export default function Contact() {
                 ) : (
                   <button
                     type="submit"
-                    className="flex mx-auto text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg"
+                    className="flex mx-auto text-white bg-amber-500 border-0 py-2 px-8 focus:outline-none hover:bg-amber-600 rounded text-lg"
                     disabled={loading}
                   >
                     Submit
@@ -113,7 +113,7 @@ export default function Contact() {
                 )}
               </div>
               <div className="p-2 w-full pt-8 mt-8 border-t border-gray-200 text-center">
-                <a className="text-yellow-500">casemove@mail.com</a>
+                <a className="text-amber-500">casemove@mail.com</a>
                 <p className="leading-normal my-5">
                   49 Smith St.
                   <br />

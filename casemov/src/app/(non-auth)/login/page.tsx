@@ -29,14 +29,17 @@ export default function Login() {
         password: formData.get("password"),
       };
 
-      const response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        cache: "no-store",
-      });
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_API_URL + "/api/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+          cache: "no-store",
+        }
+      );
 
       const result = (await response.json()) as MyResponse<{
         access_token: string;
@@ -61,8 +64,7 @@ export default function Login() {
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 lg:py-24 py-8 mx-auto flex flex-wrap items-center justify-center">
-
-      {/* <div className="container px-5 py-24 mx-auto flex flex-wrap items-center justify-center"> */}
+        {/* <div className="container px-5 py-24 mx-auto flex flex-wrap items-center justify-center"> */}
         {/* <div className="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0"> */}
         <div className="max-w-md p-8">
           <h1 className="title-font font-medium text-3xl text-gray-900 lg:text-left md:text-center">
@@ -128,14 +130,14 @@ export default function Login() {
           ) : (
             <button
               type="submit"
-              className="h-12 text-white bg-yellow-500 border-0 py-2 px-8 hover:bg-yellow-600 rounded text-lg focus:outline-none"
+              className="h-12 text-white bg-amber-500 border-0 py-2 px-8 hover:bg-amber-600 rounded text-lg focus:outline-none"
             >
               Sign In
             </button>
           )}
           <p className="text-gray-500 mt-3 mx-auto">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-yellow-500">
+            <Link href="/register" className="text-amber-500">
               Create One
             </Link>
           </p>

@@ -26,15 +26,18 @@ interface WishlistItem {
 }
 
 const fetchWishlist = async (): Promise<WishlistItem[]> => {
-  const response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/wishlist", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "no-store"
-  });
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_API_URL + "/api/wishlist",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    }
+  );
 
-  console.log(response)
+  console.log(response);
 
   if (!response.ok) {
     const data = await response.json();
@@ -45,13 +48,16 @@ const fetchWishlist = async (): Promise<WishlistItem[]> => {
 };
 
 const handleRemove = async (productId: string) => {
-  const response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/wishlist", {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ productId }),
-  });
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_API_URL + "/api/wishlist",
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ productId }),
+    }
+  );
 
   if (!response.ok) {
     const data = await response.json();
@@ -92,7 +98,7 @@ const Wishlist = () => {
 
   const loadingIcon = () => {
     return (
-      <div className="h-12 flex justify-center py-1">
+      <div className="flex justify-center items-center h-[30vh]">
         <svg
           aria-hidden="true"
           className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-yellow-400"
@@ -114,11 +120,27 @@ const Wishlist = () => {
   };
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 min-h-[50vh]">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold mb-8">Your Wishlist</h1>
         {loading && loadingIcon()}
-        {error && <div>Error: {error}</div>}
+        {error && (
+          <div
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative"
+            role="alert"
+          >
+            <span className="font-bold">Error: </span>
+            <span className="block sm:inline"> Please log in to continue.</span>
+            <div className="mt-4">
+              <a
+                href="/login"
+                className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Go to Login
+              </a>
+            </div>
+          </div>
+        )}
         {!loading && !error && (
           <>
             {wishlist.length === 0 && (
@@ -143,7 +165,7 @@ const Wishlist = () => {
                       {formatRupiah(item.products.price)}
                     </p>
                     <button
-                      className="mt-4 p-2 bg-yellow-500 text-white w-full rounded-md"
+                      className="mt-4 p-2 bg-amber-500 text-white w-full rounded-md"
                       onClick={() => handleRemoveClick(item.productId)}
                     >
                       Remove

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import Swal from "sweetalert2";
@@ -13,11 +13,22 @@ export default function ButtonAddToCart() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       // Show the Swal alert for unavailable feature
       Swal.fire({
-        text: "Sorry, this feature is not available yet",
+        icon: "info", // Add an icon to make it more visually appealing
+        title: "Feature Unavailable",
+        text: "Sorry, this feature is not available yet. Please check back later.",
         confirmButtonColor: "#e9b308",
+        confirmButtonText: "OK",
+        iconColor: "#e9b308",
       });
     } catch (error) {
       console.error("Failed to add to cart:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Something went wrong. Please try again later.",
+        confirmButtonColor: "#e9b308",
+        confirmButtonText: "OK",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -25,7 +36,7 @@ export default function ButtonAddToCart() {
 
   return (
     <button
-      className="flex-1 p-2 bg-yellow-500 text-white rounded-md"
+      className="flex-1 p-2 bg-amber-500 text-white rounded-xl"
       onClick={handleAddToCart}
       disabled={isLoading}
     >
