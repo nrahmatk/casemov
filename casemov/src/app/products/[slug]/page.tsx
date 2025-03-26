@@ -24,12 +24,12 @@ export async function generateMetadata(
   }
   const { data } = await response.json();
   return {
-    title: `${data.name} | Casemov`,
-    description: data.description,
+    title: `${data?.name} | Casemov`,
+    description: data?.description,
     openGraph: {
-      title: data.name,
-      description: data.description,
-      images: [data.images[0]],
+      title: data?.name,
+      description: data?.description,
+      images: [data?.images?.[0]],
     },
   };
 }
@@ -53,12 +53,17 @@ export default async function ProductPage({
 }: {
   params: { slug: string };
 }) {
-  if (!params.slug) {
+  const { data } = await fetchData(params.slug);
+  const compareAtPrice = 159000;
+  const rating = 4.8; // Example rating - replace with actual rating if available
+
+  if (!data) {
     return (
-      <div className="container mx-auto px-4 py-24 text-center">
+      <div className="container mx-auto px-4 py-24 text-center min-h-[50hv]">
         <h1 className="text-2xl font-bold text-gray-900">Product not found</h1>
         <p className="mt-4 text-gray-600">
-          The product you're looking for doesn't exist or has been removed.
+          {`The product you're looking for doesn't exist or has been
+          removed.`}
         </p>
         <Link
           href="/products"
@@ -70,10 +75,6 @@ export default async function ProductPage({
       </div>
     );
   }
-
-  const { data } = await fetchData(params.slug);
-  const compareAtPrice = 159000;
-  const rating = 4.8; // Example rating - replace with actual rating if available
 
   return (
     <div className="bg-gray-50 pt-8 pb-20">
@@ -88,13 +89,13 @@ export default async function ProductPage({
             Products
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-gray-900 font-medium">{data.name}</span>
+          <span className="text-gray-900 font-medium">{data?.name}</span>
         </nav>
 
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
             {/* Product Images */}
-            <ThumbnailGallery images={data.images} productName={data.name} />
+            <ThumbnailGallery images={data?.images} productName={data?.name} />
 
             {/* Product Details */}
             <div className="space-y-6">
@@ -103,9 +104,9 @@ export default async function ProductPage({
                   <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
                     PREMIUM CASE
                   </span>
-                  {data.tags.length > 0 && (
+                  {data?.tags.length > 0 && (
                     <div className="ml-3 flex flex-wrap gap-1">
-                      {data.tags.map((tag, index) => (
+                      {data?.tags.map((tag, index) => (
                         <span
                           key={index}
                           className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600"
@@ -117,7 +118,7 @@ export default async function ProductPage({
                   )}
                 </div>
                 <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">
-                  {data.name}
+                  {data?.name}
                 </h1>
               </div>
 
@@ -149,7 +150,7 @@ export default async function ProductPage({
               {/* Price */}
               <div className="flex items-center space-x-3">
                 <span className="text-3xl font-bold text-gray-900">
-                  {formatRupiah(data.price)}
+                  {formatRupiah(data?.price)}
                 </span>
                 {compareAtPrice && (
                   <span className="text-lg text-gray-500 line-through">
@@ -160,7 +161,7 @@ export default async function ProductPage({
                   <span className="rounded-md bg-green-100 px-2 py-1 text-sm font-medium text-green-800">
                     Save{" "}
                     {Math.round(
-                      ((compareAtPrice - data.price) / compareAtPrice) * 100
+                      ((compareAtPrice - data?.price) / compareAtPrice) * 100
                     )}
                     %
                   </span>
@@ -169,7 +170,7 @@ export default async function ProductPage({
 
               {/* Description */}
               <div className="prose prose-sm max-w-none text-gray-600">
-                <p>{data.description}</p>
+                <p>{data?.description}</p>
               </div>
 
               {/* Options */}
@@ -210,7 +211,7 @@ export default async function ProductPage({
                 <div className="flex-1">
                   <ButtonAddToCart />
                 </div>
-                <ButtonAddWishList productId={data._id} />
+                <ButtonAddWishList productId={data?._id} />
               </div>
 
               {/* Features */}

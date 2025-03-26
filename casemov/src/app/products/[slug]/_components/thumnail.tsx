@@ -9,7 +9,7 @@ export default function ThumbnailGallery({
   images: string[];
   productName: string;
 }) {
-  const [selectedImage, setSelectedImage] = useState(images[0]); // Gambar utama
+  const [selectedImage, setSelectedImage] = useState(images?.[0]); // Gambar utama
 
   return (
     <div className="space-y-4">
@@ -26,7 +26,7 @@ export default function ThumbnailGallery({
 
       {/* Thumbnail Gallery */}
       <div className="grid grid-cols-4 gap-2">
-        {images.slice(0, 3).map((image, index) => (
+        {images?.slice(0, 3).map((image, index) => (
           <div
             key={index}
             className={`overflow-hidden rounded-lg border-2 ${
