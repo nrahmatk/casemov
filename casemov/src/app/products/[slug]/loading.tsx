@@ -2,8 +2,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function ProductLoading() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="animate-pulse mx-auto max-w-6xl">
+    <div className="container mx-auto px-4 py-20">
+      <div className="animate-pulse mx-auto max-w-6xl pt-2">
         <div className="grid gap-8 md:grid-cols-2">
           {/* Product Image Skeleton */}
           <div className="aspect-square w-full overflow-hidden rounded-2xl bg-gray-200"></div>
