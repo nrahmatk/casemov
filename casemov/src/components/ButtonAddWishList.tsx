@@ -33,16 +33,16 @@ export default function ButtonAddWishList({ productId }: Props) {
           icon: "success",
           title: "Added to Wishlist",
           text: result.message,
-          confirmButtonColor: "#e9b308",
+          confirmButtonColor: "#f59e0b",
           confirmButtonText: "OK",
-          iconColor: "#e9b308",
+          iconColor: "#f59e0b",
         });
       } else {
         Swal.fire({
           icon: "warning",
           title: "Failed to Add",
           text: result.message,
-          confirmButtonColor: "#e9b308",
+          confirmButtonColor: "#f59e0b",
           confirmButtonText: "OK",
         });
       }
@@ -51,7 +51,7 @@ export default function ButtonAddWishList({ productId }: Props) {
         icon: "error",
         title: "Error",
         text: "Failed to add item to wishlist. Please try again later.",
-        confirmButtonColor: "#e9b308",
+        confirmButtonColor: "#f59e0b",
         confirmButtonText: "OK",
       });
     } finally {
@@ -61,8 +61,8 @@ export default function ButtonAddWishList({ productId }: Props) {
 
   return (
     <button
-      className={`rounded-full w-10 h-10 bg-amber-500 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4 ${
-        isLoading ? "opacity-100 cursor-not-allowed p-2" : ""
+      className={`rounded-full min-w-10 h-10 bg-amber-500 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4 ${
+        isLoading ? "opacity-100 cursor-not-allowed" : ""
       }`}
       onClick={handleAddToWishlist}
       disabled={isLoading}

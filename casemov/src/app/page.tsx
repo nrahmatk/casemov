@@ -27,7 +27,7 @@ export default async function Home() {
   return (
     <div className="bg-gray-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white to-gray-50 py-20 md:py-24 lg:py-32 lg:pt-16">
+      <section className="relative overflow-hidden bg-gradient-to-b from-white to-gray-50 py-0 md:py-24 lg:py-32 lg:pt-16">
         <div className="absolute inset-0 z-0 opacity-5">
           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px]" />
         </div>

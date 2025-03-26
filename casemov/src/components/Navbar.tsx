@@ -1,15 +1,18 @@
 "use client";
 
 import type React from "react";
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-// import ButtonAuth from "./ButtonAuth";
 import { Menu, X, ShoppingBag, Heart, Phone } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   // Handle scroll effect
   useEffect(() => {
@@ -24,6 +27,30 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Close menu when clicking outside
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+      if (
+        showSearch &&
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setShowSearch(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen, showSearch]);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
     <header
@@ -72,11 +99,6 @@ export default function Navbar() {
             </NavLink>
           </nav>
 
-          {/* Auth Button (Desktop) */}
-          {/* <div className="hidden md:block">
-            <ButtonAuth />
-          </div> */}
-
           {/* Mobile Menu Button */}
           <button
             className="rounded-md p-2 text-gray-700 md:hidden"
@@ -89,29 +111,32 @@ export default function Navbar() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="mt-4 border-t border-gray-100 py-4 md:hidden">
+          <div
+            ref={menuRef}
+            className="mt-4 border-t border-gray-100 py-4 md:hidden"
+          >
             <nav className="flex flex-col space-y-4">
               <MobileNavLink
                 href="/products"
                 icon={<ShoppingBag className="h-5 w-5" />}
+                onClick={() => setIsOpen(false)}
               >
                 Products
               </MobileNavLink>
               <MobileNavLink
                 href="/wishlist"
                 icon={<Heart className="h-5 w-5" />}
+                onClick={() => setIsOpen(false)}
               >
                 Wishlist
               </MobileNavLink>
               <MobileNavLink
                 href="/contact"
                 icon={<Phone className="h-5 w-5" />}
+                onClick={() => setIsOpen(false)}
               >
                 Contact Us
               </MobileNavLink>
-              {/* <div className="pt-2">
-                <ButtonAuth />
-              </div> */}
             </nav>
           </div>
         )}
@@ -147,22 +172,18 @@ function MobileNavLink({
   href,
   children,
   icon,
+  onClick,
 }: {
   href: string;
   children: React.ReactNode;
   icon?: React.ReactNode;
+  onClick?: () => void;
 }) {
   return (
     <Link
       href={href}
       className="flex items-center rounded-lg px-4 py-2.5 text-base font-medium text-gray-700 transition-colors hover:bg-gray-50 hover:text-amber-500"
-      onClick={() => {
-        // Close mobile menu when a link is clicked
-        const setIsOpen = (window as any).setIsOpen;
-        if (typeof setIsOpen === "function") {
-          setIsOpen(false);
-        }
-      }}
+      onClick={onClick}
     >
       {icon && <span className="mr-3">{icon}</span>}
       {children}

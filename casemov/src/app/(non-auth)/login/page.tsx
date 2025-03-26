@@ -54,7 +54,7 @@ export default function Login() {
       if (error instanceof Error)
         Swal.fire({
           text: error.message,
-          confirmButtonColor: "#e9b308",
+          confirmButtonColor: "#f59e0b",
         });
     } finally {
       setIsLoading(false);

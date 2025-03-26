@@ -1,28 +1,36 @@
 import ButtonAddToCart from "@/components/ButtonAddToCard";
 import ButtonAddWishList from "@/components/ButtonAddWishList";
 import { formatRupiah } from "@/components/formatRupiah";
-import { ProductModel } from "@/db/models/products";
-import { Metadata, ResolvingMetadata } from "next";
-import Image from "next/image";
+import type { ProductModel } from "@/db/models/products";
+import type { Metadata, ResolvingMetadata } from "next";
+import { Star, Share2, ChevronDown, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import ThumbnailGallery from "./_components/thumnail";
+import CaseColorSelector from "./_components/case-color";
 
 export async function generateMetadata(
   { params }: { params: { slug: string } },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  // const decodedSlug = decodeURIComponent(params.slug);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/products/${params.slug}`,
     {
       cache: "no-store",
     }
   );
+
   if (!response.ok) {
     throw new Error("failed to fetch");
   }
   const { data } = await response.json();
   return {
-    title: data.slug,
+    title: `${data.name} | Casemov`,
     description: data.description,
+    openGraph: {
+      title: data.name,
+      description: data.description,
+      images: [data.images[0]],
+    },
   };
 }
 
@@ -46,178 +54,258 @@ export default async function ProductPage({
   params: { slug: string };
 }) {
   if (!params.slug) {
-    return <p>Product not found</p>;
+    return (
+      <div className="container mx-auto px-4 py-24 text-center">
+        <h1 className="text-2xl font-bold text-gray-900">Product not found</h1>
+        <p className="mt-4 text-gray-600">
+          The product you're looking for doesn't exist or has been removed.
+        </p>
+        <Link
+          href="/products"
+          className="mt-8 inline-flex items-center rounded-full bg-amber-500 px-6 py-3 text-white hover:bg-amber-600"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Products
+        </Link>
+      </div>
+    );
   }
 
   const { data } = await fetchData(params.slug);
+  const compareAtPrice = 159000;
+  const rating = 4.8; // Example rating - replace with actual rating if available
 
   return (
-    <section className="text-gray-600 body-font overflow-hidden">
-      <div className="container px-5 py-24 mx-auto">
-        <div className="lg:w-4/5 mx-auto flex flex-wrap">
-          <img
-            alt="ecommerce"
-            className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
-            src={data.images[0]}
-          />
-          <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-            <h2 className="text-sm title-font text-gray-500 tracking-widest">
-              BRAND NAME
-            </h2>
-            <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
-              {data.name}
-            </h1>
-            <h2 className="text-sm title-font text-gray-500 tracking-widest">
-              Tags :{" "}
-              {data.tags.map((tag, index) => (
-                <span key={index} className="mr-2">
-                  {tag}
-                </span>
-              ))}
-            </h2>
-            <div className="flex mb-4">
-              <span className="flex items-center">
-                <svg
-                  fill="currentColor"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  className="w-4 h-4 text-amber-500"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-                <svg
-                  fill="currentColor"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  className="w-4 h-4 text-amber-500"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-                <svg
-                  fill="currentColor"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  className="w-4 h-4 text-amber-500"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-                <svg
-                  fill="currentColor"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  className="w-4 h-4 text-amber-500"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  className="w-4 h-4 text-amber-500"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-                <span className="text-gray-600 ml-3">5 Reviews</span>
-              </span>
-              <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2s">
-                <a className="text-gray-500">
-                  <svg
-                    fill="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    className="w-5 h-5"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
-                  </svg>
-                </a>
-                <a className="text-gray-500">
-                  <svg
-                    fill="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    className="w-5 h-5"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
-                  </svg>
-                </a>
-                <a className="text-gray-500">
-                  <svg
-                    fill="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    className="w-5 h-5"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
-                  </svg>
-                </a>
-              </span>
-            </div>
-            <p className="leading-relaxed">{data.description}</p>
-            <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-              <div className="flex">
-                <span className="mr-3">Case Color</span>
-                <button className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none" />
-                <button className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none" />
-              </div>
-              <div className="flex ml-6 items-center">
-                <span className="mr-3">Phone Type</span>
-                <div className="relative">
-                  <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:border-yellow-500 text-base pl-3 pr-10">
-                    <option>Iphone 15</option>
-                    <option>Iphone 14</option>
-                    <option>Iphone 13</option>
-                    <option>Iphone 12</option>
-                  </select>
-                  <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
-                    <svg
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      className="w-4 h-4"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M6 9l6 6 6-6" />
-                    </svg>
+    <div className="bg-gray-50 pt-8 pb-20">
+      <div className="container mx-auto px-4">
+        {/* Breadcrumb */}
+        <nav className="mb-8 flex items-center text-sm text-gray-500">
+          <Link href="/" className="hover:text-amber-500">
+            Home
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/products" className="hover:text-amber-500">
+            Products
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-gray-900 font-medium">{data.name}</span>
+        </nav>
+
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
+            {/* Product Images */}
+            <ThumbnailGallery images={data.images} productName={data.name} />
+
+            {/* Product Details */}
+            <div className="space-y-6">
+              <div>
+                <div className="mb-2 flex items-center">
+                  <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+                    PREMIUM CASE
                   </span>
+                  {data.tags.length > 0 && (
+                    <div className="ml-3 flex flex-wrap gap-1">
+                      {data.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">
+                  {data.name}
+                </h1>
+              </div>
+
+              {/* Rating */}
+              <div className="flex items-center">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-5 w-5 ${
+                        i < Math.floor(rating)
+                          ? "fill-amber-500 text-amber-500"
+                          : i < rating
+                          ? "fill-amber-500/50 text-amber-500"
+                          : "fill-none text-gray-300"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="ml-2 text-sm text-gray-600">
+                  {rating} ({Math.floor(Math.random() * 100) + 10} reviews)
+                </span>
+                <button className="ml-auto flex items-center text-sm text-gray-500 hover:text-amber-500">
+                  <Share2 className="mr-1 h-4 w-4" />
+                  Share
+                </button>
+              </div>
+
+              {/* Price */}
+              <div className="flex items-center space-x-3">
+                <span className="text-3xl font-bold text-gray-900">
+                  {formatRupiah(data.price)}
+                </span>
+                {compareAtPrice && (
+                  <span className="text-lg text-gray-500 line-through">
+                    {formatRupiah(compareAtPrice)}
+                  </span>
+                )}
+                {compareAtPrice && (
+                  <span className="rounded-md bg-green-100 px-2 py-1 text-sm font-medium text-green-800">
+                    Save{" "}
+                    {Math.round(
+                      ((compareAtPrice - data.price) / compareAtPrice) * 100
+                    )}
+                    %
+                  </span>
+                )}
+              </div>
+
+              {/* Description */}
+              <div className="prose prose-sm max-w-none text-gray-600">
+                <p>{data.description}</p>
+              </div>
+
+              {/* Options */}
+              <div className="space-y-4 pt-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-900">
+                    Case Color
+                  </label>
+                  <CaseColorSelector />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="phone-type"
+                    className="mb-2 block text-sm font-medium text-gray-900"
+                  >
+                    Phone Type
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="phone-type"
+                      className="w-full appearance-none rounded-lg border border-gray-200 bg-white px-4 py-3 pr-10 text-gray-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                    >
+                      <option>iPhone 15 Pro Max</option>
+                      <option>iPhone 15 Pro</option>
+                      <option>iPhone 15 Plus</option>
+                      <option>iPhone 15</option>
+                      <option>iPhone 14 Pro Max</option>
+                      <option>iPhone 14 Pro</option>
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex">
-              <span className="title-font font-medium text-2xl text-gray-900">
-                {formatRupiah(data.price)}
-              </span>
-              <span className="flex ml-auto">
-                <ButtonAddToCart />
-              </span>
 
-              <ButtonAddWishList productId={data._id} />
+              {/* Add to Cart */}
+              <div className="flex items-center space-x-4 pt-6">
+                <div className="flex-1">
+                  <ButtonAddToCart />
+                </div>
+                <ButtonAddWishList productId={data._id} />
+              </div>
+
+              {/* Features */}
+              <div className="mt-8 grid grid-cols-2 gap-4 rounded-xl border border-gray-200 bg-white p-4 text-sm">
+                <div className="flex items-start space-x-2">
+                  <div className="rounded-full bg-amber-100 p-1 text-amber-600">
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">Premium Quality</p>
+                    <p className="text-gray-500">Durable materials</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <div className="rounded-full bg-amber-100 p-1 text-amber-600">
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">Perfect Fit</p>
+                    <p className="text-gray-500">Precise cutouts</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <div className="rounded-full bg-amber-100 p-1 text-amber-600">
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">Shock Resistant</p>
+                    <p className="text-gray-500">Drop protection</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <div className="rounded-full bg-amber-100 p-1 text-amber-600">
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">
+                      Wireless Charging
+                    </p>
+                    <p className="text-gray-500">Compatible</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

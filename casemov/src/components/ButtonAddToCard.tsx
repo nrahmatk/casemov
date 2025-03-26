@@ -16,9 +16,9 @@ export default function ButtonAddToCart() {
         icon: "info", // Add an icon to make it more visually appealing
         title: "Feature Unavailable",
         text: "Sorry, this feature is not available yet. Please check back later.",
-        confirmButtonColor: "#e9b308",
+        confirmButtonColor: "#f59e0b",
         confirmButtonText: "OK",
-        iconColor: "#e9b308",
+        iconColor: "#f59e0b",
       });
     } catch (error) {
       console.error("Failed to add to cart:", error);
@@ -26,7 +26,7 @@ export default function ButtonAddToCart() {
         icon: "error",
         title: "Error",
         text: "Something went wrong. Please try again later.",
-        confirmButtonColor: "#e9b308",
+        confirmButtonColor: "#f59e0b",
         confirmButtonText: "OK",
       });
     } finally {
@@ -36,7 +36,7 @@ export default function ButtonAddToCart() {
 
   return (
     <button
-      className="flex-1 p-2 bg-amber-500 text-white rounded-xl"
+      className="flex items-center justify-center w-full px-4 py-2 bg-amber-500 text-white rounded-xl"
       onClick={handleAddToCart}
       disabled={isLoading}
     >

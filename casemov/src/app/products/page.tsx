@@ -46,7 +46,7 @@ export default function Products() {
     } catch (error) {
       Swal.fire({
         text: "Failed to fetch data",
-        confirmButtonColor: "#e9b308",
+        confirmButtonColor: "#f59e0b",
       });
     } finally {
       setIsLoading(false);

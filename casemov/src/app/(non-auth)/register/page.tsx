@@ -46,7 +46,7 @@ export default function Register() {
 
       Swal.fire({
         text: result.message,
-        confirmButtonColor: "#e9b308",
+        confirmButtonColor: "#f59e0b",
       });
 
       router.push("/login");
@@ -55,7 +55,7 @@ export default function Register() {
       if (error instanceof Error)
         Swal.fire({
           text: error.message,
-          confirmButtonColor: "#e9b308",
+          confirmButtonColor: "#f59e0b",
         });
     } finally {
       setIsLoading(false);

@@ -13,7 +13,7 @@ export default function Contact() {
       setLoading(false);
       Swal.fire({
         text: "Your message has been sent successfully!",
-        confirmButtonColor: "#e9b308",
+        confirmButtonColor: "#f59e0b",
       });
     }, 2000);
   };
