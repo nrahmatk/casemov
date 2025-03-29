@@ -48,12 +48,27 @@ const fetchData = async (slug: string): Promise<{ data: ProductModel }> => {
   return data;
 };
 
+const fetchRelatedProducts = async (): Promise<{ data: ProductModel[] }> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/products?limit=4`,
+    {
+      cache: "no-store",
+    }
+  );
+  if (!response.ok) {
+    throw new Error("failed to fetch related products");
+  }
+  const data = await response.json();
+  return data;
+};
+
 export default async function ProductPage({
   params,
 }: {
   params: { slug: string };
 }) {
   const { data } = await fetchData(params.slug);
+  const { data: relatedProducts } = await fetchRelatedProducts();
   const rating = 4.8; // Example rating - replace with actual rating if available
 
   if (!data) {
@@ -288,6 +303,59 @@ export default async function ProductPage({
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+          {/* You May Also Like Section */}
+          <div className="mt-20">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">
+              You May Also Like
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              {relatedProducts &&
+                relatedProducts
+                  .filter((product) => product._id !== data?._id)
+                  .slice(0, 4)
+                  .map((product, index) => (
+                    <Link
+                      href={`/products/${product.slug}`}
+                      className="group bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition-all duration-300 transform hover:-translate-y-1"
+                    >
+                      <div className="relative aspect-square overflow-hidden">
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          sizes="(max-width: 768px) 50vw, 25vw"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      </div>
+                      <div className="p-3 md:p-4">
+                        <h3 className="font-medium text-gray-900 line-clamp-1 group-hover:text-amber-500 transition-colors">
+                          {product.name}
+                        </h3>
+                        <p className="mt-1 text-amber-600 font-medium">
+                          {formatRupiah(product.price)}
+                        </p>
+                        <div className="mt-2 flex items-center">
+                          <div className="flex">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-3 w-3 ${
+                                  // i < 4
+                                  "fill-amber-500 text-amber-500"
+                                  // : "fill-none text-gray-300"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <span className="ml-1 text-xs text-gray-500">
+                            {Math.floor(Math.random() * 50) + 10}
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
             </div>
           </div>
         </div>

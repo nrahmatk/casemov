@@ -1,10 +1,10 @@
 "use client";
 
 import CardProduct from "@/components/CardProduct";
+import { Modal } from "@/components/modal";
 import { ProductModel } from "@/components/type";
 import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Swal from "sweetalert2";
 
 export default function Products() {
   const [data, setData] = useState<ProductModel[]>([]);
@@ -13,6 +13,16 @@ export default function Products() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSearching, setIsSearching] = useState(false);
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    type: "",
+    title: "",
+    message: "",
+  });
+
+  const closeModal = () => {
+    setModalState((prev) => ({ ...prev, isOpen: false }));
+  };
 
   const fetchProducts = async (
     isNewSearch = false,
@@ -44,9 +54,11 @@ export default function Products() {
         setHasMore(true);
       }
     } catch (error) {
-      Swal.fire({
-        text: "Failed to fetch data",
-        confirmButtonColor: "#f59e0b",
+      setModalState({
+        isOpen: true,
+        type: "error",
+        title: "Error",
+        message: "Failed to fetch data",
       });
     } finally {
       setIsLoading(false);
@@ -167,6 +179,13 @@ export default function Products() {
           </InfiniteScroll>
         )}
       </div>
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        type={modalState.type}
+        title={modalState.title}
+        message={modalState.message}
+      />
     </div>
   );
 }

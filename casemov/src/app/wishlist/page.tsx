@@ -1,8 +1,7 @@
 "use client";
 
-import { getCookies } from "@/actions";
 import { formatRupiah } from "@/components/formatRupiah";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface WishlistItem {
@@ -25,19 +24,19 @@ interface WishlistItem {
   updatedAt: string;
 }
 
-const fetchWishlist = async (): Promise<WishlistItem[]> => {
+const fetchWishlist = async (token: string): Promise<WishlistItem[]> => {
   const response = await fetch(
     process.env.NEXT_PUBLIC_API_URL + "/api/wishlist",
     {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       cache: "no-store",
     }
   );
 
-  console.log(response);
 
   if (!response.ok) {
     const data = await response.json();
@@ -47,13 +46,14 @@ const fetchWishlist = async (): Promise<WishlistItem[]> => {
   return await response.json();
 };
 
-const handleRemove = async (productId: string) => {
+const handleRemove = async (productId: string, token: string) => {
   const response = await fetch(
     process.env.NEXT_PUBLIC_API_URL + "/api/wishlist",
     {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ productId }),
     }
@@ -69,11 +69,24 @@ const Wishlist = () => {
   const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
+    // Get token from localStorage
+    const accessToken = localStorage.getItem("access_token");
+    setToken(accessToken);
+
+    console.log(accessToken)
+
+    if (!accessToken) {
+      setError("Authentication required");
+      setLoading(false);
+      return;
+    }
+
     const loadWishlist = async () => {
       try {
-        const data = await fetchWishlist();
+        const data = await fetchWishlist(accessToken);
         setWishlist(data);
       } catch (err) {
         setError((err as Error).message);
@@ -86,8 +99,13 @@ const Wishlist = () => {
   }, []);
 
   const handleRemoveClick = async (productId: string) => {
+    if (!token) {
+      setError("Authentication required");
+      return;
+    }
+
     try {
-      await handleRemove(productId);
+      await handleRemove(productId, token);
       setWishlist((prev) =>
         prev.filter((item) => item.productId !== productId)
       );
@@ -170,7 +188,6 @@ const Wishlist = () => {
                     >
                       Remove
                     </button>
-                    {/* <button onClick={() => handleRemoveClick(item.productId)} className="mt-4 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded mx-auto">Remove</button> */}
                   </div>
                 </div>
               ))}

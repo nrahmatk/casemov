@@ -1,11 +1,11 @@
 "use client";
 
 import { successLogin } from "@/actions";
+import { Modal } from "@/components/modal";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import Swal from "sweetalert2";
 
 interface MyResponse<T> {
   data: T;
@@ -15,20 +15,30 @@ interface MyResponse<T> {
 export default function Login() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    type: "",
+    title: "",
+    message: "",
+  });
+
+  const closeModal = () => {
+    setModalState((prev) => ({ ...prev, isOpen: false }));
+  };
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-
+  
       setIsLoading(true);
-
+  
       const formData = new FormData(e.currentTarget);
-
+  
       const data = {
         email: formData.get("email"),
         password: formData.get("password"),
       };
-
+  
       const response = await fetch(
         process.env.NEXT_PUBLIC_API_URL + "/api/login",
         {
@@ -40,21 +50,27 @@ export default function Login() {
           cache: "no-store",
         }
       );
-
+  
       const result = (await response.json()) as MyResponse<{
         access_token: string;
       }>;
-
+  
       if (!response.ok) {
         throw new Error(result.message);
       }
+      
+      // Save token to localStorage
+      localStorage.setItem('access_token', result.data.access_token);
+      
+      // Continue with original successLogin function
       successLogin("/products", result.data.access_token);
     } catch (error) {
-      console.log(error);
       if (error instanceof Error)
-        Swal.fire({
-          text: error.message,
-          confirmButtonColor: "#f59e0b",
+        setModalState({
+          isOpen: true,
+          type: "error",
+          title: "Error",
+          message: error.message,
         });
     } finally {
       setIsLoading(false);
@@ -143,6 +159,13 @@ export default function Login() {
           </p>
         </form>
       </div>
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        type={modalState.type}
+        title={modalState.title}
+        message={modalState.message}
+      />
     </section>
   );
 }

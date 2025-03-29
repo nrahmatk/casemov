@@ -1,9 +1,15 @@
 "use client";
+import { Modal } from "@/components/modal";
 import React, { FormEvent, useState } from "react";
-import Swal from "sweetalert2";
 
 export default function Contact() {
   const [loading, setLoading] = useState(false);
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    type: "",
+    title: "",
+    message: "",
+  });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -11,11 +17,17 @@ export default function Contact() {
 
     setTimeout(() => {
       setLoading(false);
-      Swal.fire({
-        text: "Your message has been sent successfully!",
-        confirmButtonColor: "#f59e0b",
+      setModalState({
+        isOpen: true,
+        type: "error",
+        title: "Error",
+        message: "Error submit, try again later.",
       });
-    }, 2000);
+    }, 500);
+  };
+
+  const closeModal = () => {
+    setModalState((prev) => ({ ...prev, isOpen: false }));
   };
 
   return (
@@ -176,6 +188,14 @@ export default function Contact() {
           </form>
         </div>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        type={modalState.type}
+        title={modalState.title}
+        message={modalState.message}
+      />
     </section>
   );
 }

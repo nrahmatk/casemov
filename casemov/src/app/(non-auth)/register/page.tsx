@@ -1,13 +1,23 @@
 "use client";
 
+import { Modal } from "@/components/modal";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import Swal from "sweetalert2";
 
 export default function Register() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    type: "",
+    title: "",
+    message: "",
+  });
+
+  const closeModal = () => {
+    setModalState((prev) => ({ ...prev, isOpen: false }));
+  };
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     try {
@@ -44,18 +54,22 @@ export default function Register() {
 
       console.log(result);
 
-      Swal.fire({
-        text: result.message,
-        confirmButtonColor: "#f59e0b",
+      setModalState({
+        isOpen: true,
+        type: "error",
+        title: "Error",
+        message: result.message,
       });
 
       router.push("/login");
     } catch (error) {
       console.log(error);
       if (error instanceof Error)
-        Swal.fire({
-          text: error.message,
-          confirmButtonColor: "#f59e0b",
+        setModalState({
+          isOpen: true,
+          type: "error",
+          title: "Error",
+          message: error.message,
         });
     } finally {
       setIsLoading(false);
@@ -168,6 +182,14 @@ export default function Register() {
           </p>
         </form>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        type={modalState.type}
+        title={modalState.title}
+        message={modalState.message}
+      />
     </section>
   );
 }
