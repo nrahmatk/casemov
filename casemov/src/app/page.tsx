@@ -203,9 +203,9 @@ export default function Home() {
                 <div className="mt-4 h-1 w-16 rounded bg-amber-500" />
               </div>
               <p className="w-full text-base leading-relaxed text-gray-700 lg:w-1/2">
-                We've engineered our cases to provide exceptional protection
-                while maintaining a sleek profile. Discover the perfect balance
-                of durability, functionality, and aesthetics.
+                We&apos;ve engineered our cases to provide exceptional
+                protection while maintaining a sleek profile. Discover the
+                perfect balance of durability, functionality, and aesthetics.
               </p>
             </motion.div>
 
