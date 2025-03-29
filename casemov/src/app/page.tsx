@@ -17,9 +17,11 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import ButtonAddWishList from "@/components/ButtonAddWishList";
 import AdvantagesSection from "@/components/advantage";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 // Create a client component for the animated content
 export default function Home() {
+  const isMobile = useIsMobile();
   const [products, setProducts] = useState<ProductModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -95,7 +97,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
               >
-                <motion.div whileTap={{ scale: 0.95 }}>
+                <motion.div whileTap={isMobile ? undefined : { scale: 0.98 }}>
                   <Link href="/products">
                     <button className="group inline-flex h-12 items-center justify-center rounded-full bg-amber-500 px-8 text-sm font-medium text-white shadow-md transition-all hover:bg-amber-600 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
                       Shop Collection
@@ -362,7 +364,7 @@ export default function Home() {
                       {/* 3D Tilting Card effect */}
                       <motion.div
                         className="perspective-1000 h-full"
-                        whileTap={{ scale: 0.98 }}
+                        whileTap={isMobile ? undefined : { scale: 0.98 }}
                       >
                         <div className="absolute right-3 top-3 z-10 flex -translate-y-2 flex-col space-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                           <ButtonAddWishList productId={product?._id} />
@@ -476,7 +478,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: 0.4, duration: 0.5 }}
             >
-              <motion.div whileTap={{ scale: 0.95 }}>
+              <motion.div whileTap={isMobile ? undefined : { scale: 0.98 }}>
                 <Link
                   href="/products"
                   className="inline-flex items-center rounded-full bg-amber-500 px-8 py-3 text-base font-medium text-white shadow-md transition-all hover:bg-amber-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
