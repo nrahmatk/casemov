@@ -1,61 +1,19 @@
-import { motion } from "framer-motion";
-
 export default function Testimony() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-      },
-    },
-  };
-
   return (
     <section className="text-gray-700 body-font bg-gray-50 py-16 md:py-24">
       <div className="container px-5 mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mb-16"
-        >
+        <div className="mb-16">
           <h2 className="text-sm font-bold tracking-widest text-amber-500 uppercase text-center mb-2">
             Testimonials
           </h2>
           <h1 className="text-4xl font-bold text-gray-900 text-center">
             What Our Customers Say
           </h1>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="flex flex-wrap -m-4"
-        >
-          <motion.div variants={itemVariants} className="p-4 md:w-1/2 w-full">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              whileTap={{ scale: 0.98 }}
-
-              className="h-full bg-white p-8 rounded-xl shadow-md border border-gray-100"
-            >
+        <div className="flex flex-wrap -m-4">
+          <div className="p-4 md:w-1/2 w-full">
+            <div className="h-full bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
               <div className="text-amber-500 mb-6">
                 <svg
                   width="32"
@@ -77,11 +35,10 @@ export default function Testimony() {
                 it look bulky.
               </p>
               <div className="flex items-center">
-                <motion.img
-                  whileHover={{ scale: 1.1 }}
+                <img
                   alt="testimonial"
                   src="https://randomuser.me/api/portraits/men/3.jpg"
-                  className="w-14 h-14 rounded-full flex-shrink-0 object-cover object-center border-2 border-amber-500 p-0.5"
+                  className="w-14 h-14 rounded-full flex-shrink-0 object-cover object-center border-2 border-amber-500 p-0.5 hover:scale-105 transition-transform duration-300"
                 />
                 <span className="flex-grow flex flex-col pl-4">
                   <span className="title-font font-bold text-gray-900">
@@ -99,17 +56,11 @@ export default function Testimony() {
                   ))}
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
-          <motion.div variants={itemVariants} className="p-4 md:w-1/2 w-full">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              whileTap={{ scale: 0.98 }}
-
-              className="h-full bg-white p-8 rounded-xl shadow-md border border-gray-100"
-            >
+          <div className="p-4 md:w-1/2 w-full">
+            <div className="h-full bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
               <div className="text-amber-500 mb-6">
                 <svg
                   width="32"
@@ -131,11 +82,10 @@ export default function Testimony() {
                 phone cases!
               </p>
               <div className="flex items-center">
-                <motion.img
-                  whileHover={{ scale: 1.1 }}
+                <img
                   alt="testimonial"
                   src="https://randomuser.me/api/portraits/men/1.jpg"
-                  className="w-14 h-14 rounded-full flex-shrink-0 object-cover object-center border-2 border-amber-500 p-0.5"
+                  className="w-14 h-14 rounded-full flex-shrink-0 object-cover object-center border-2 border-amber-500 p-0.5 hover:scale-105 transition-transform duration-300"
                 />
                 <span className="flex-grow flex flex-col pl-4">
                   <span className="title-font font-bold text-gray-900">
@@ -153,9 +103,9 @@ export default function Testimony() {
                   ))}
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
-        </motion.div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

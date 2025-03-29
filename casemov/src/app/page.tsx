@@ -57,10 +57,8 @@ export default function Home() {
 
   // Only fetch products when the products section is in view
   useEffect(() => {
-    if (productsInView && isLoading) {
-      fetchProducts();
-    }
-  }, [productsInView, fetchProducts, isLoading]);
+    fetchProducts();
+  }, []);
 
   // Memoize case options to prevent recreating on each render
   const caseOptions = useMemo(
@@ -326,7 +324,7 @@ export default function Home() {
         </section>
 
         {/* Products Section - Optimized */}
-        <section ref={productsRef} className="py-20">
+        <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="mb-12 flex flex-wrap items-center">
               <div className="mb-6 w-full lg:mb-0 lg:w-1/2">
