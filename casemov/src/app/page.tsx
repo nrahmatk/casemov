@@ -1,51 +1,109 @@
 "use client";
 
-import Testimony from "@/components/Testimony";
-import { formatRupiah } from "@/components/formatRupiah";
-import type { ProductModel } from "@/components/type";
-import {
-  ArrowRight,
-  Check,
-  Shield,
-  Truck,
-  Users,
-  Zap,
-  Package,
-} from "lucide-react";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { useInView } from "react-intersection-observer";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { formatRupiah } from "@/components/formatRupiah";
+import type { ProductModel } from "@/components/type";
 import ButtonAddWishList from "@/components/ButtonAddWishList";
+
+// Import AdvantagesSection directly since we want to keep its animations
 import AdvantagesSection from "@/components/advantage";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
-// Create a client component for the animated content
+// Dynamically import Testimony component
+const Testimony = dynamic(() => import("@/components/Testimony"), {
+  ssr: false,
+  loading: () => <div className="h-96 bg-gray-50" />,
+});
+
 export default function Home() {
   const isMobile = useIsMobile();
   const [products, setProducts] = useState<ProductModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/products?page=1&limit=8`
-        );
-        const data = await response.json();
-        setProducts(data.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-        setIsLoading(false);
-      }
-    };
+  // Intersection observers for lazy loading sections
+  const [caseOptionsRef, caseOptionsInView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+  const [productsRef, productsInView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+  const [testimonyRef, testimonyInView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
-    fetchData();
+  // Memoize fetch function to prevent recreating on each render
+  const fetchProducts = useCallback(async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/products?page=1&limit=8`
+      );
+      const data = await response.json();
+      setProducts(data.data);
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  // Only fetch products when the products section is in view
+  useEffect(() => {
+    if (productsInView && isLoading) {
+      fetchProducts();
+    }
+  }, [productsInView, fetchProducts, isLoading]);
+
+  // Memoize case options to prevent recreating on each render
+  const caseOptions = useMemo(
+    () => [
+      {
+        name: "Premium Hybrid Crystal",
+        image:
+          "https://res.cloudinary.com/dszhu92hc/image/upload/v1720236055/dt3bv9rkwricuieiivnb.png",
+        description:
+          "Our hybrid crystal cases combine scratch-resistant acrylic backing with flexible TPU bumpers for camera protection and responsive button functionality.",
+        feature: "Ultra-Clear Design",
+      },
+      {
+        name: "High Plastic TPE",
+        image:
+          "https://res.cloudinary.com/dszhu92hc/image/upload/v1720236055/tl6pbtdig3vsvcnnrch7.png",
+        description:
+          "Engineered from durable thermoplastic elastomer, these cases provide excellent drop protection with precise cutouts and raised bezels for screen safety.",
+        feature: "6ft Drop Protection",
+      },
+      {
+        name: "Blackmatte Texture",
+        image:
+          "https://res.cloudinary.com/dszhu92hc/image/upload/v1720236054/ebckbmmlcibtbxy1fh9e.png",
+        description:
+          "Features a sophisticated matte finish with soft microfiber lining. The smooth yet grippy exterior prevents fingerprints while maintaining a premium feel.",
+        feature: "Anti-Fingerprint",
+      },
+      {
+        name: "Premium Softcase Antiknock",
+        image:
+          "https://res.cloudinary.com/dszhu92hc/image/upload/v1720236055/cykyz1bjeaojxlzhe5v7.png",
+        description:
+          "Utilizes advanced impact-absorbing polymer that disperses shock on contact. Maintains a slim profile while offering military-grade drop protection.",
+        feature: "Military-Grade",
+      },
+    ],
+    []
+  );
 
   return (
     <div className="bg-gray-50">
-      {/* Hero Section */}
+      {/* Hero Section - Keep original animations */}
       <section className="relative overflow-hidden bg-gradient-to-b from-white to-gray-50 py-0 md:py-24 lg:py-32 lg:pt-16">
         <div className="absolute inset-0 z-0 opacity-5">
           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px]" />
@@ -97,14 +155,12 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
               >
-                <motion.div whileTap={isMobile ? undefined : { scale: 0.98 }}>
-                  <Link href="/products">
-                    <button className="group inline-flex h-12 items-center justify-center rounded-full bg-amber-500 px-8 text-sm font-medium text-white shadow-md transition-all hover:bg-amber-600 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
-                      Shop Collection
-                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </button>
-                  </Link>
-                </motion.div>
+                <Link href="/products">
+                  <button className="group inline-flex h-12 items-center justify-center rounded-full bg-amber-500 px-8 text-sm font-medium text-white shadow-md transition-all hover:bg-amber-600 hover:shadow-lg active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+                    Shop Collection
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+                </Link>
                 <Link href="/about">
                   <button className="inline-flex h-12 items-center justify-center rounded-full border border-gray-200 bg-white px-8 text-sm font-medium text-gray-900 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-200 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
                     Learn More
@@ -131,6 +187,8 @@ export default function Home() {
                           i + 20
                         }.jpg`}
                         alt={`User ${i}`}
+                        width={32}
+                        height={32}
                         className="h-full w-full object-cover"
                       />
                     </motion.div>
@@ -151,7 +209,6 @@ export default function Home() {
               <div className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-amber-400/20 to-amber-500/5 blur-3xl"></div>
               <motion.div
                 className="group relative h-full w-full overflow-hidden rounded-2xl border border-gray-100 bg-white/80 p-2 shadow-xl backdrop-blur transition-all duration-300 hover:shadow-2xl lg:p-3"
-                whileHover={{ y: -5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <div className="relative h-full w-full overflow-hidden rounded-xl bg-white">
@@ -169,7 +226,6 @@ export default function Home() {
                   initial={{ y: 60, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.8, duration: 0.5 }}
-                  whileHover={{ y: -5 }}
                 >
                   <p className="font-medium text-gray-900">
                     Discover our premium collection
@@ -185,16 +241,13 @@ export default function Home() {
       </section>
 
       <div className="container mx-auto max-w-screen-xl">
-        {/* Case Options Section */}
-        <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+        {/* Case Options Section - Optimized */}
+        <section
+          ref={caseOptionsRef}
+          className="py-16 bg-gradient-to-b from-gray-50 to-white"
+        >
           <div className="container mx-auto px-4">
-            <motion.div
-              className="mb-12 flex flex-wrap items-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.4 }}
-            >
+            <div className="mb-12 flex flex-wrap items-center">
               <div className="mb-6 w-full lg:mb-0 lg:w-1/2">
                 <span className="mb-2 block text-sm font-medium uppercase tracking-wider text-amber-600">
                   Case Technology
@@ -209,118 +262,73 @@ export default function Home() {
                 protection while maintaining a sleek profile. Discover the
                 perfect balance of durability, functionality, and aesthetics.
               </p>
-            </motion.div>
-
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {[
-                {
-                  name: "Premium Hybrid Crystal",
-                  image:
-                    "https://res.cloudinary.com/dszhu92hc/image/upload/v1720236055/dt3bv9rkwricuieiivnb.png",
-                  description:
-                    "Our hybrid crystal cases combine scratch-resistant acrylic backing with flexible TPU bumpers for camera protection and responsive button functionality.",
-                  feature: "Ultra-Clear Design",
-                },
-                {
-                  name: "High Plastic TPE",
-                  image:
-                    "https://res.cloudinary.com/dszhu92hc/image/upload/v1720236055/tl6pbtdig3vsvcnnrch7.png",
-                  description:
-                    "Engineered from durable thermoplastic elastomer, these cases provide excellent drop protection with precise cutouts and raised bezels for screen safety.",
-                  feature: "6ft Drop Protection",
-                },
-                {
-                  name: "Blackmatte Texture",
-                  image:
-                    "https://res.cloudinary.com/dszhu92hc/image/upload/v1720236054/ebckbmmlcibtbxy1fh9e.png",
-                  description:
-                    "Features a sophisticated matte finish with soft microfiber lining. The smooth yet grippy exterior prevents fingerprints while maintaining a premium feel.",
-                  feature: "Anti-Fingerprint",
-                },
-                {
-                  name: "Premium Softcase Antiknock",
-                  image:
-                    "https://res.cloudinary.com/dszhu92hc/image/upload/v1720236055/cykyz1bjeaojxlzhe5v7.png",
-                  description:
-                    "Utilizes advanced impact-absorbing polymer that disperses shock on contact. Maintains a slim profile while offering military-grade drop protection.",
-                  feature: "Military-Grade",
-                },
-              ].map((material, index) => (
-                <motion.div
-                  key={index}
-                  className="group relative rounded-xl bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-lg"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.15 }}
-                >
-                  <div className="mb-5 overflow-hidden rounded-lg">
-                    <img
-                      className="h-48 w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                      src={material.image}
-                      alt={`${material.name} case`}
-                    />
-                  </div>
-
-                  <div className="absolute -top-2 right-4 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-white shadow-md">
-                    {material.feature}
-                  </div>
-
-                  <h3 className="mb-3 text-lg font-semibold text-gray-900">
-                    {material.name}
-                  </h3>
-
-                  <div className="mb-3 h-px w-full bg-gray-100" />
-
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    {material.description}
-                  </p>
-
-                  <div className="mt-4 flex items-center text-xs text-gray-500">
-                    <svg
-                      className="mr-1 h-4 w-4 text-amber-500"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    Wireless charging compatible
-                  </div>
-                </motion.div>
-              ))}
             </div>
 
-            <motion.div
-              className="mt-12 flex justify-center"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.6 }}
-            >
+            {caseOptionsInView && (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                {caseOptions.map((material, index) => (
+                  <div
+                    key={index}
+                    className="group relative rounded-xl bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-lg"
+                  >
+                    <div className="mb-5 overflow-hidden rounded-lg">
+                      <Image
+                        className="h-48 w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                        src={material.image || "/placeholder.svg"}
+                        alt={`${material.name} case`}
+                        width={400}
+                        height={192}
+                      />
+                    </div>
+
+                    <div className="absolute -top-2 right-4 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-white shadow-md">
+                      {material.feature}
+                    </div>
+
+                    <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                      {material.name}
+                    </h3>
+
+                    <div className="mb-3 h-px w-full bg-gray-100" />
+
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {material.description}
+                    </p>
+
+                    <div className="mt-4 flex items-center text-xs text-gray-500">
+                      <svg
+                        className="mr-1 h-4 w-4 text-amber-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      Wireless charging compatible
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="mt-12 flex justify-center">
               <div>
                 <button className="group flex items-center rounded-full border border-amber-500 bg-transparent px-6 py-3 text-sm font-medium text-amber-500 transition-all hover:bg-amber-500 hover:text-white">
                   Learn more about our materials
                   <ArrowRight className="ml-2 h-4 w-4 transition-all group-hover:translate-x-1" />
                 </button>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
-        {/* Products Section */}
-        <section className="py-20">
+        {/* Products Section - Optimized */}
+        <section ref={productsRef} className="py-20">
           <div className="container mx-auto px-4">
-            <motion.div
-              className="mb-12 flex flex-wrap items-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.4 }}
-            >
+            <div className="mb-12 flex flex-wrap items-center">
               <div className="mb-6 w-full lg:mb-0 lg:w-1/2">
                 <span className="mb-2 block text-sm font-medium uppercase tracking-wider text-amber-600">
                   Featured Collection
@@ -335,15 +343,11 @@ export default function Home() {
                 bestselling collection, crafted for those who refuse to
                 compromise.
               </p>
-            </motion.div>
+            </div>
 
             {isLoading ? (
               <div className="flex h-96 flex-col items-center justify-center space-y-4">
-                <motion.div
-                  className="h-12 w-12 rounded-full border-4 border-amber-200 border-t-amber-500"
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                />
+                <div className="h-12 w-12 rounded-full border-4 border-amber-200 border-t-amber-500 animate-spin" />
                 <p className="text-sm text-gray-500">
                   Loading stunning cases...
                 </p>
@@ -353,61 +357,36 @@ export default function Home() {
                 {/* Main product grid */}
                 <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
                   {products.map((product, index) => (
-                    <motion.div
-                      key={product._id}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-50px" }}
-                      transition={{ duration: 0.5, delay: index * 0.08 }}
-                      className="group relative"
-                    >
-                      {/* 3D Tilting Card effect */}
-                      <motion.div
-                        className="perspective-1000 h-full"
-                        whileTap={isMobile ? undefined : { scale: 0.98 }}
-                      >
-                        <div className="absolute right-3 top-3 z-10 flex -translate-y-2 flex-col space-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                          <ButtonAddWishList productId={product?._id} />
+                    <div key={product._id} className="group relative">
+                      {/* Simplified card without 3D effects */}
+                      <div className="h-full">
+                        <div className="absolute right-3 top-3 z-10 flex -translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                          {productsInView && (
+                            <ButtonAddWishList productId={product?._id} />
+                          )}
                         </div>
                         <Link
                           href={`/products/${product.slug}`}
                           className="group block h-full overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 hover:shadow-xl"
                         >
-                          {/* Quick actions overlay */}
-
-                          {/* Product image with hover effect */}
+                          {/* Product image with simplified hover effect */}
                           <div className="relative aspect-square bg-gray-50">
-                            <motion.div
-                              className="absolute inset-0 flex items-center justify-center overflow-hidden"
-                              whileHover="hover"
-                            >
-                              <motion.img
+                            <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+                              <Image
                                 alt={product.name}
-                                className="h-full w-full object-cover object-center"
+                                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                                 src={product.thumbnail || "/placeholder.svg"}
-                                variants={{
-                                  hover: {
-                                    scale: 1.08,
-                                    transition: {
-                                      duration: 0.6,
-                                      ease: [0.25, 1, 0.5, 1],
-                                    },
-                                  },
-                                }}
+                                width={400}
+                                height={400}
+                                loading="lazy"
                               />
 
                               {/* Gradient overlay on hover */}
-                              <motion.div
-                                className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"
-                                variants={{
-                                  hover: { opacity: 1 },
-                                }}
-                                initial={{ opacity: 0 }}
-                              />
-                            </motion.div>
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                            </div>
 
                             {/* Product badges */}
-                            {index % 3 === 0 && (
+                            {/* {index % 3 === 0 && (
                               <span className="absolute left-3 top-3 rounded-full bg-amber-500 px-2 py-1 text-xs font-medium text-white shadow-sm">
                                 New
                               </span>
@@ -416,7 +395,7 @@ export default function Home() {
                               <span className="absolute left-3 top-3 rounded-full bg-red-500 px-2 py-1 text-xs font-medium text-white shadow-sm">
                                 Sale
                               </span>
-                            )}
+                            )} */}
                           </div>
 
                           {/* Product details */}
@@ -447,64 +426,41 @@ export default function Home() {
 
                             {/* Add to cart button */}
                             <div className="flex items-center justify-between">
-                              <motion.div
-                                className="text-gray-500 transition-colors group-hover:text-amber-500"
-                                animate={{ x: [0, 3, 0] }}
-                                transition={{
-                                  duration: 1.2,
-                                  repeat: Infinity,
-                                  repeatDelay: 1.5,
-                                }}
-                              >
+                              <div className="text-gray-500 transition-colors group-hover:text-amber-500">
                                 <ArrowRight className="h-5 w-5" />
-                              </motion.div>
+                              </div>
                               <span className="text-xs text-gray-500 transition-colors group-hover:text-gray-700">
                                 View details
                               </span>
                             </div>
                           </div>
                         </Link>
-                      </motion.div>
-                    </motion.div>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
             )}
 
-            <motion.div
-              className="mt-16 flex justify-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-            >
-              <motion.div whileTap={isMobile ? undefined : { scale: 0.98 }}>
+            <div className="mt-16 flex justify-center">
+              <div>
                 <Link
                   href="/products"
                   className="inline-flex items-center rounded-full bg-amber-500 px-8 py-3 text-base font-medium text-white shadow-md transition-all hover:bg-amber-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
                 >
                   View All Products
-                  <motion.div
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{
-                      repeat: Infinity,
-                      duration: 1.5,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </motion.div>
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Why Choose Us Section */}
+        {/* Advantages Section - Keep original animations */}
         <AdvantagesSection />
 
-        {/* Testimonials Section */}
-        <Testimony />
+        {/* Testimonials Section - Lazy loaded */}
+        <div ref={testimonyRef}>{testimonyInView && <Testimony />}</div>
       </div>
     </div>
   );

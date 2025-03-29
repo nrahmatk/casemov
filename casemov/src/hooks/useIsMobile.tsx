@@ -1,24 +1,37 @@
-import { useState, useEffect } from "react";
+"use client"
 
-export function useIsMobile(breakpoint = 768): boolean {
-  const [isMobile, setIsMobile] = useState(false);
+import { useState, useEffect } from "react"
+
+export function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    // Check if window exists (client-side)
+    if (typeof window !== "undefined") {
+      // Initial check
+      setIsMobile(window.innerWidth < 768)
 
-    const checkIsMobile = () => {
-      setIsMobile(window.innerWidth <= breakpoint);
-    };
+      // Add event listener for resize
+      const handleResize = () => {
+        setIsMobile(window.innerWidth < 768)
+      }
 
-    // Periksa ukuran layar saat komponen pertama kali dipasang
-    checkIsMobile();
+      // Throttle the resize event to improve performance
+      let resizeTimer: string | number | NodeJS.Timeout | undefined
+      const throttledResize = () => {
+        if (resizeTimer) clearTimeout(resizeTimer)
+        resizeTimer = setTimeout(handleResize, 100)
+      }
 
-    // Tambahkan event listener untuk perubahan ukuran layar
-    window.addEventListener("resize", checkIsMobile);
+      window.addEventListener("resize", throttledResize)
 
-    // Bersihkan event listener saat komponen di-unmount
-    return () => window.removeEventListener("resize", checkIsMobile);
-  }, [breakpoint]);
+      // Clean up
+      return () => {
+        window.removeEventListener("resize", throttledResize)
+      }
+    }
+  }, [])
 
-  return isMobile;
+  return isMobile
 }
+
