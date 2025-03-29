@@ -136,7 +136,7 @@ export default function Products() {
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-6 pt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:px-6 pt-6">
             {[...Array(8)].map((_, i) => (
               <LoadingCard key={i} />
             ))}
@@ -147,7 +147,7 @@ export default function Products() {
             next={() => fetchProducts(false, 4)}
             hasMore={hasMore}
             loader={
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-6 pt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:px-6 pt-6">
                 {[...Array(4)].map((_, i) => (
                   <LoadingCard key={i} />
                 ))}
@@ -159,7 +159,7 @@ export default function Products() {
               </p>
             }
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-6 pt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:px-6 pt-6">
               {data.map((product) => (
                 <CardProduct product={product} key={product._id} />
               ))}

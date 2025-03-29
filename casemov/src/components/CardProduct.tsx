@@ -3,6 +3,7 @@ import ButtonAddToCart from "./ButtonAddToCard";
 import ButtonAddWishList from "./ButtonAddWishList";
 import { formatRupiah } from "./formatRupiah";
 import { ProductModel } from "./type";
+import Image from "next/image";
 
 interface Props {
   product: ProductModel;
@@ -11,13 +12,16 @@ interface Props {
 export default function CardProduct({ product }: Props) {
   return (
     <div className="bg-white shadow-md rounded-xl overflow-hidden md:transform md:hover:scale-105 transition duration-300 ease-in-out">
-      <div className="relative aspect-w-1 aspect-h-1">
-        <Link href={`/products/${product.slug}`}>
-          <img
-            src={product.thumbnail}
-            alt={product.name}
-            className="w-full h-full object-cover"
-          />
+      <div className="relative w-full pb-[100%]">
+        <Link href={`/products/${product.slug}`} className="absolute inset-0">
+          <div className="w-full h-full bg-gray-200">
+            <img
+              src={product.thumbnail}
+              alt={product.name}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
         </Link>
       </div>
       <hr className="bg-gray-300" />

@@ -54,7 +54,6 @@ export default async function ProductPage({
   params: { slug: string };
 }) {
   const { data } = await fetchData(params.slug);
-  const compareAtPrice = 159000;
   const rating = 4.8; // Example rating - replace with actual rating if available
 
   if (!data) {
@@ -78,7 +77,7 @@ export default async function ProductPage({
 
   return (
     <div className="bg-gray-50 pt-8 pb-20">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         {/* Breadcrumb */}
         <nav className="mb-8 flex items-center text-sm text-gray-500">
           <Link href="/" className="hover:text-amber-500">
@@ -152,20 +151,6 @@ export default async function ProductPage({
                 <span className="text-3xl font-bold text-gray-900">
                   {formatRupiah(data?.price)}
                 </span>
-                {compareAtPrice && (
-                  <span className="text-lg text-gray-500 line-through">
-                    {formatRupiah(compareAtPrice)}
-                  </span>
-                )}
-                {compareAtPrice && (
-                  <span className="rounded-md bg-green-100 px-2 py-1 text-sm font-medium text-green-800">
-                    Save{" "}
-                    {Math.round(
-                      ((compareAtPrice - data?.price) / compareAtPrice) * 100
-                    )}
-                    %
-                  </span>
-                )}
               </div>
 
               {/* Description */}
