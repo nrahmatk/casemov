@@ -318,6 +318,7 @@ export default async function ProductPage({
                   .map((product, index) => (
                     <Link
                       href={`/products/${product.slug}`}
+                      key={index}
                       className="group bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition-all duration-300 transform hover:-translate-y-1"
                     >
                       <div className="relative aspect-square overflow-hidden">
